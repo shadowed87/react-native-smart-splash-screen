@@ -10,3 +10,6 @@ npm-debug.log
 /android/build
 /ios/**/*xcuserdata*
 /ios/**/*xcshareddata*
+android/.classpath
+android/.project
+android/.settings/org.eclipse.buildship.core.prefs

@@ -11,6 +11,10 @@ static RCTRootView *rootView = nil;
 
 RCT_EXPORT_MODULE(SplashScreen)
 
++ (BOOL) requiresMainQueueSetup
+{
+    return YES;
+}
 
 + (void)open:(RCTRootView *)v {
     [RCTSplashScreen open:v withImageNamed:@"splash"];
