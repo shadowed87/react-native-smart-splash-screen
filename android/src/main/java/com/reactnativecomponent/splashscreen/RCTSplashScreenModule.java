@@ -2,8 +2,6 @@ package com.reactnativecomponent.splashscreen;
 
 import android.os.Handler;
 
-import androidx.annotation.Nullable;
-
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -12,6 +10,8 @@ import com.facebook.react.bridge.ReadableMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 
 public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
