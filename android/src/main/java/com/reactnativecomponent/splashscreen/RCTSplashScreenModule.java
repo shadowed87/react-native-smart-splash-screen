@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -48,6 +49,14 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
 
         }
 
+    }
+
+    @ReactMethod
+    public void cleanScreenImage() {
+        File file = new File(RCTSplashScreenModule.ImgPath);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     /**
