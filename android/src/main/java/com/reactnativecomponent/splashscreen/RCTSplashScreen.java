@@ -3,6 +3,8 @@ package com.reactnativecomponent.splashscreen;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -13,6 +15,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 
@@ -41,24 +44,39 @@ public class RCTSplashScreen {
 
     public static void openSplashScreen(final Activity activity, final boolean isFullScreen, final ImageView.ScaleType scaleType) {
         if (activity == null) return;
+        /** add by david at 2019-10-17 start  */
+        // 查看本地是否存在图片
+        File file = new File(RCTSplashScreenModule.ImgPath);
+        final boolean file_exists = file.exists();
+        /** add by david at 2019-10-17 end  */
+
         wr_activity = new WeakReference<>(activity);
         final int drawableId = getImageId();
-        if ((dialog != null && dialog.isShowing())||(drawableId == 0)) {
+        if ((dialog != null && dialog.isShowing()) || (drawableId == 0)) {
             return;
         }
         activity.runOnUiThread(new Runnable() {
             public void run() {
 
-                if(!getActivity().isFinishing()) {
+                if (!getActivity().isFinishing()) {
                     Context context = getActivity();
                     imageView = new ImageView(context);
 
-                    imageView.setImageResource(drawableId);
+//                    imageView.setImageResource(drawableId);
 
                     LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                     imageView.setLayoutParams(layoutParams);
 
-                    imageView.setImageResource(drawableId);
+                    /** add by david at 2019-10-18 start */
+                    if (file_exists) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath);
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+                        imageView.setImageResource(drawableId);
+                    }
+                    /** add by david at 2019-10-18 end */
+
+
                     imageView.setScaleType(scaleType);
 
                     dialog = new Dialog(context, isFullScreen ? android.R.style.Theme_Translucent_NoTitleBar_Fullscreen : android.R.style.Theme_Translucent_NoTitleBar);
@@ -77,17 +95,17 @@ public class RCTSplashScreen {
         });
     }
 
-    public static void removeSplashScreen(Activity activity, final int animationType,final int duration) {
+    public static void removeSplashScreen(Activity activity, final int animationType, final int duration) {
         if (activity == null) {
             activity = getActivity();
-            if(activity == null) return;
+            if (activity == null) return;
         }
         activity.runOnUiThread(new Runnable() {
             public void run() {
                 if (dialog != null && dialog.isShowing()) {
                     AnimationSet animationSet = new AnimationSet(true);
 
-                    if(animationType == UIAnimationScale) {
+                    if (animationType == UIAnimationScale) {
                         AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
                         fadeOut.setDuration(duration);
                         animationSet.addAnimation(fadeOut);
@@ -95,28 +113,28 @@ public class RCTSplashScreen {
                         ScaleAnimation scale = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.65f);
                         scale.setDuration(duration);
                         animationSet.addAnimation(scale);
-                    }
-                    else if(animationType == UIAnimationFade) {
+                    } else if (animationType == UIAnimationFade) {
                         AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
                         fadeOut.setDuration(duration);
                         animationSet.addAnimation(fadeOut);
-                    }
-                    else {
+                    } else {
                         AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
                         fadeOut.setDuration(0);
                         animationSet.addAnimation(fadeOut);
                     }
 
-                    final View view = ((ViewGroup)dialog.getWindow().getDecorView()).getChildAt(0);
+                    final View view = ((ViewGroup) dialog.getWindow().getDecorView()).getChildAt(0);
                     view.startAnimation(animationSet);
 
                     animationSet.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
                         }
+
                         @Override
                         public void onAnimationRepeat(Animation animation) {
                         }
+
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             view.post(new Runnable() {
