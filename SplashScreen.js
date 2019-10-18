@@ -18,5 +18,8 @@ export default class SplashScreen {
     static close(param) {
         SplashScreenModule.close(param);
     }
+    static cleanScreenImage() {
+        SplashScreenModule.cleanScreenImage();
+    }
 }
 

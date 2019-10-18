@@ -52,6 +52,10 @@ RCT_EXPORT_METHOD(loadLaunchScreenImage:(NSString *)url) {
         
     }
 }
+RCT_EXPORT_METHOD(cleanScreenImage) {
+    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"launchScreenImageUrl"];
+    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"launchScreenImageData"];
+}
 
 RCT_EXPORT_METHOD(close:(NSDictionary *)options) {
     if (!rootView) {
