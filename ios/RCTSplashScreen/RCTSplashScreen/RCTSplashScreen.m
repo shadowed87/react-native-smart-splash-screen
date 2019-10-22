@@ -47,7 +47,7 @@ RCT_EXPORT_METHOD(loadLaunchScreenImage:(NSString *)url) {
         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
         
         // 存储图片路径和图片，以便下次比较是否需要下载网络图片
-        [[NSUserDefaults standardUserDefaults] setValue:imageUrl forKey:@"launchScreenImageUrl"];
+        [[NSUserDefaults standardUserDefaults] setValue:url forKey:@"launchScreenImageUrl"];
         [[NSUserDefaults standardUserDefaults] setValue:imageData forKey:@"launchScreenImageData"];
         
     }
