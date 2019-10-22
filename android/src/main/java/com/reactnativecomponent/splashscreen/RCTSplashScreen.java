@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -46,6 +47,7 @@ public class RCTSplashScreen {
         if (activity == null) return;
         /** add by david at 2019-10-17 start  */
         // 查看本地是否存在图片
+        RCTSplashScreenModule.getImgPath(activity);
         File file = new File(RCTSplashScreenModule.ImgPath);
         final boolean file_exists = file.exists();
         /** add by david at 2019-10-17 end  */
