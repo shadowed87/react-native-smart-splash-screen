@@ -75,6 +75,7 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
         if (ImgPath == null) {
             getImgPath(getReactApplicationContext());
         }
+        Url = url;
         try {
             String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
             int permission_result = PermissionChecker.checkPermission(getCurrentActivity(), perms[0], android.os.Process.myPid(), android.os.Process.myUid(), getCurrentActivity().getPackageName());
@@ -82,7 +83,7 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
                 ActivityCompat.requestPermissions((Activity) getCurrentActivity(), perms, RCTSplashScreenModule.CODE);
                 return;
             }
-            Url = url;
+          
             Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
             saveBitmapToSDCard(mBitmap);
         } catch (Exception e) {
