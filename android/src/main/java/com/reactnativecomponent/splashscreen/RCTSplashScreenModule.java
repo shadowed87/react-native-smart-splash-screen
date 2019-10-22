@@ -43,10 +43,14 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
 
     public static void requestPermissionsCallback() {
         try {
-            Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
-            saveBitmapToSDCard(mBitmap);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
+                    saveBitmapToSDCard(mBitmap);
+                }
+            }).start();
         } catch (Exception e) {
-
         }
 
     }
@@ -83,7 +87,6 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
                 ActivityCompat.requestPermissions((Activity) getCurrentActivity(), perms, RCTSplashScreenModule.CODE);
                 return;
             }
-          
             Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
             saveBitmapToSDCard(mBitmap);
         } catch (Exception e) {
@@ -109,15 +112,20 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
         }
     }
 
-    public static InputStream getImageStream(String path) throws Exception {
-        URL url = new URL(path);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(5 * 1000);
-        conn.setRequestMethod("GET");
-        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            return conn.getInputStream();
+    public static InputStream getImageStream(String path) {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5 * 1000);
+            conn.setRequestMethod("GET");
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return conn.getInputStream();
+            }
+            return null;
+
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
 
