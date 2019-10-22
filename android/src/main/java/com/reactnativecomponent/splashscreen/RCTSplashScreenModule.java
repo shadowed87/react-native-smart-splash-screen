@@ -2,6 +2,7 @@ package com.reactnativecomponent.splashscreen;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -27,8 +28,7 @@ import androidx.core.content.PermissionChecker;
 
 
 public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
-    public static String ImgPath = Environment.getExternalStorageDirectory()
-            .getAbsolutePath() + "/" + "mg_open_image.jpg";
+    public static String ImgPath = null;
     public static int CODE = 11000;
     public static String Url = "";
 
@@ -59,11 +59,22 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
         }
     }
 
+    public static void getImgPath(Context context) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            RCTSplashScreenModule.ImgPath = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_image.jpg";
+        } else {
+            RCTSplashScreenModule.ImgPath = context.getFilesDir().getAbsolutePath() + "/mg_open_image.jpg";
+        }
+    }
+
     /**
      * 图片下载方法
      */
     @ReactMethod
     public void loadLaunchScreenImage(String url) {
+        if (ImgPath == null) {
+            getImgPath(getReactApplicationContext());
+        }
         try {
             String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
             int permission_result = PermissionChecker.checkPermission(getCurrentActivity(), perms[0], android.os.Process.myPid(), android.os.Process.myUid(), getCurrentActivity().getPackageName());
