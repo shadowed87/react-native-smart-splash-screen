@@ -12,6 +12,7 @@ import {
 const SplashScreenModule = NativeModules.SplashScreen;
 
 export default class SplashScreen {
+
     static loadLaunchScreenImage(start_url, icon_url) {
         SplashScreenModule.loadLaunchScreenImage(start_url, icon_url);
     }

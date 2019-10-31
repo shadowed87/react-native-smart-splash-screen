@@ -24,14 +24,37 @@ RCT_EXPORT_MODULE(SplashScreen)
 + (void)open:(RCTRootView *)v withImageNamed:(NSString *)imageName {
     rootView = v;
 
+    NSString *imageUrl = [[NSUserDefaults standardUserDefaults] valueForKey:@"launchScreenImageUrl"];
+    NSData *imageData = [[NSUserDefaults standardUserDefaults] valueForKey:@"launchScreenImageData"];
     UIImageView *view = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    
-    view.image = [UIImage imageNamed:imageName];
+    // 判断本地是否保存有网络启动图，有则加载网络启动图，无则加载默认的启动页
+    if (imageUrl.length > 0 && imageData.length > 0) {
+        view.image = [UIImage imageWithData:imageData];
+    } else {
+        view.image = [UIImage imageNamed:imageName];
+    }
     view.contentMode = UIViewContentModeScaleAspectFill;
 
     [[NSNotificationCenter defaultCenter] removeObserver:rootView  name:RCTContentDidAppearNotification object:rootView];
     
     [rootView setLoadingView:view];
+}
+
+RCT_EXPORT_METHOD(loadLaunchScreenImage:(NSString *)url) {
+    NSString *imageUrl = [[NSUserDefaults standardUserDefaults] valueForKey:@"launchScreenImageUrl"];
+    if (![url isEqualToString:imageUrl]) {
+        // 如果本地没有网络启动图，你下载网络启动图
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        
+        // 存储图片路径和图片，以便下次比较是否需要下载网络图片
+        [[NSUserDefaults standardUserDefaults] setValue:url forKey:@"launchScreenImageUrl"];
+        [[NSUserDefaults standardUserDefaults] setValue:imageData forKey:@"launchScreenImageData"];
+        
+    }
+}
+RCT_EXPORT_METHOD(cleanScreenImage) {
+    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"launchScreenImageUrl"];
+    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"launchScreenImageData"];
 }
 
 RCT_EXPORT_METHOD(close:(NSDictionary *)options) {
