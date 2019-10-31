@@ -9,4 +9,17 @@ import {
     NativeModules,
 } from 'react-native'
 
-export default NativeModules.SplashScreen
+const SplashScreenModule = NativeModules.SplashScreen;
+
+export default class SplashScreen {
+    static loadLaunchScreenImage(start_url, icon_url) {
+        SplashScreenModule.loadLaunchScreenImage(start_url, icon_url);
+    }
+    static close(param) {
+        SplashScreenModule.close(param);
+    }
+    static cleanScreenImage() {
+        SplashScreenModule.cleanScreenImage();
+    }
+}
+

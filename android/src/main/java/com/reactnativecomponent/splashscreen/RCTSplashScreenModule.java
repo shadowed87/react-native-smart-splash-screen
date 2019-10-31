@@ -28,9 +28,12 @@ import androidx.core.content.PermissionChecker;
 
 
 public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
-    public static String ImgPath = null;
+    public static String ImgPath_start = null;
+    public static String ImgPath_icon = null;
+
     public static int CODE = 11000;
-    public static String Url = "";
+    public static String Url_start = "";
+    public static String Url_icon = "";
 
     public RCTSplashScreenModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -46,8 +49,7 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
-                    saveBitmapToSDCard(mBitmap);
+                    downLoadImage(Url_start, Url_icon);
                 }
             }).start();
         } catch (Exception e) {
@@ -55,19 +57,30 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
 
     }
 
+    /**
+     * 清除图片
+     */
     @ReactMethod
     public void cleanScreenImage() {
-        File file = new File(RCTSplashScreenModule.ImgPath);
+        File file = new File(RCTSplashScreenModule.ImgPath_start);
         if (file.exists()) {
             file.delete();
+        }
+        File file_icon = new File(RCTSplashScreenModule.ImgPath_icon);
+        if (file_icon.exists()) {
+            file_icon.delete();
         }
     }
 
     public static void getImgPath(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            RCTSplashScreenModule.ImgPath = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_image.jpg";
+            RCTSplashScreenModule.ImgPath_start = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_image.jpg";
+            RCTSplashScreenModule.ImgPath_icon = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_icon.jpg";
+
         } else {
-            RCTSplashScreenModule.ImgPath = context.getFilesDir().getAbsolutePath() + "/mg_open_image.jpg";
+            RCTSplashScreenModule.ImgPath_start = context.getFilesDir().getAbsolutePath() + "/mg_open_image.jpg";
+            RCTSplashScreenModule.ImgPath_icon = context.getFilesDir().getAbsolutePath() + "/mg_open_icon.jpg";
+
         }
     }
 
@@ -75,23 +88,31 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
      * 图片下载方法
      */
     @ReactMethod
-    public void loadLaunchScreenImage(String url) {
-        if (ImgPath == null) {
-            getImgPath(getReactApplicationContext());
-        }
-        Url = url;
+    public void loadLaunchScreenImage(String start_url, String icon_url) {
+        Url_start = start_url;
+        Url_icon = icon_url;
+
         try {
+            /**权限申请 */
             String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
             int permission_result = PermissionChecker.checkPermission(getCurrentActivity(), perms[0], android.os.Process.myPid(), android.os.Process.myUid(), getCurrentActivity().getPackageName());
             if (permission_result != PermissionChecker.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity) getCurrentActivity(), perms, RCTSplashScreenModule.CODE);
                 return;
             }
-            Bitmap mBitmap = BitmapFactory.decodeStream(getImageStream(Url));
-            saveBitmapToSDCard(mBitmap);
+
+            downLoadImage(Url_start, Url_icon);
         } catch (Exception e) {
 
         }
+    }
+
+    public static void downLoadImage(String start_url, String icon_url) {
+        Bitmap mBitmap_start = BitmapFactory.decodeStream(getImageStream(start_url));
+        saveBitmapToSDCard(mBitmap_start, 1);
+
+        Bitmap mBitmap_icon = BitmapFactory.decodeStream(getImageStream(icon_url));
+        saveBitmapToSDCard(mBitmap_icon, 2);
     }
 
     /**
@@ -99,9 +120,16 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
      *
      * @param bitmap
      */
-    public static void saveBitmapToSDCard(Bitmap bitmap) {
+    public static void saveBitmapToSDCard(Bitmap bitmap, int type) {
         FileOutputStream fos = null;
         try {
+            String ImgPath = "";
+            if (type == 1) {
+                ImgPath = ImgPath_start;
+            }
+            if (type == 2) {
+                ImgPath = ImgPath_icon;
+            }
             fos = new FileOutputStream(ImgPath);//picPath为保存SD卡路径
             if (fos != null) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
