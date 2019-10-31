@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -43,13 +42,22 @@ public class RCTSplashScreen {
         openSplashScreen(activity, isFullScreen, ImageView.ScaleType.CENTER_CROP);
     }
 
+    public static boolean checkFileExists(String start_url, String icon_url) {
+        boolean file_exists = false;
+        boolean start = new File(RCTSplashScreenModule.ImgPath_start).exists();
+        boolean file_icon = new File(RCTSplashScreenModule.ImgPath_icon).exists();
+        if (start) {
+            file_exists = true;
+        }
+        return file_exists;
+    }
+
     public static void openSplashScreen(final Activity activity, final boolean isFullScreen, final ImageView.ScaleType scaleType) {
         if (activity == null) return;
         /** add by david at 2019-10-17 start  */
         // 查看本地是否存在图片
         RCTSplashScreenModule.getImgPath(activity);
-        File file = new File(RCTSplashScreenModule.ImgPath);
-        final boolean file_exists = file.exists();
+        final boolean file_exists = checkFileExists(RCTSplashScreenModule.ImgPath_start, RCTSplashScreenModule.ImgPath_icon);
         /** add by david at 2019-10-17 end  */
 
         wr_activity = new WeakReference<>(activity);
@@ -62,6 +70,22 @@ public class RCTSplashScreen {
 
                 if (!getActivity().isFinishing()) {
                     Context context = getActivity();
+                    if (file_exists) {
+                        View view = View.inflate(context, R.layout.start_view, null);
+                        ImageView start_image = view.findViewById(R.id.start_image);
+                        ImageView icon_image = view.findViewById(R.id.icon_image);
+                        Bitmap bitmap_start = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_start);
+                        start_image.setImageBitmap(bitmap_start);
+
+                        Bitmap bitmap_icon = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_icon);
+                        icon_image.setImageBitmap(bitmap_icon);
+
+                        dialog = new Dialog(context, isFullScreen ? android.R.style.Theme_Translucent_NoTitleBar_Fullscreen : android.R.style.Theme_Translucent_NoTitleBar);
+                        dialog.setContentView(view);
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        return;
+                    }
                     imageView = new ImageView(context);
 
 //                    imageView.setImageResource(drawableId);
@@ -70,12 +94,7 @@ public class RCTSplashScreen {
                     imageView.setLayoutParams(layoutParams);
 
                     /** add by david at 2019-10-18 start */
-                    if (file_exists) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath);
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        imageView.setImageResource(drawableId);
-                    }
+                    imageView.setImageResource(drawableId);
                     /** add by david at 2019-10-18 end */
 
 
