@@ -45,7 +45,7 @@ RCT_EXPORT_METHOD(loadLaunchScreenImage:(NSString *)start_url iconUrl:(NSString 
     NSString *imageUrl = [[NSUserDefaults standardUserDefaults] valueForKey:@"launchScreenImageUrl"];
     if (![start_url isEqualToString:imageUrl]) {
         // 如果本地没有网络启动图，你下载网络启动图
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:start_url]];
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:start_url];
         
         // 存储图片路径和图片，以便下次比较是否需要下载网络图片
         [[NSUserDefaults standardUserDefaults] setValue:start_url forKey:@"launchScreenImageUrl"];
