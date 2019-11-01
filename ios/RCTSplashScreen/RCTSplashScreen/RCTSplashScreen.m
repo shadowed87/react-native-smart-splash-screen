@@ -41,10 +41,11 @@ RCT_EXPORT_MODULE(SplashScreen)
 }
 
 RCT_EXPORT_METHOD(loadLaunchScreenImage:(NSString *)start_url iconUrl:(NSString *)icon_url ) {
+    // 下载启动图，目前只用到start_url
     NSString *imageUrl = [[NSUserDefaults standardUserDefaults] valueForKey:@"launchScreenImageUrl"];
     if (![start_url isEqualToString:imageUrl]) {
         // 如果本地没有网络启动图，你下载网络启动图
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:start_url]];
         
         // 存储图片路径和图片，以便下次比较是否需要下载网络图片
         [[NSUserDefaults standardUserDefaults] setValue:start_url forKey:@"launchScreenImageUrl"];
