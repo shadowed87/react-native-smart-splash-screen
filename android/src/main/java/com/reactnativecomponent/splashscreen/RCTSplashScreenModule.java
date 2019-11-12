@@ -74,12 +74,12 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
 
     public static void getImgPath(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            RCTSplashScreenModule.ImgPath_start = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_image.jpg";
-            RCTSplashScreenModule.ImgPath_icon = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_icon.jpg";
+            RCTSplashScreenModule.ImgPath_start = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_image.png";
+            RCTSplashScreenModule.ImgPath_icon = context.getExternalFilesDir(null).getAbsolutePath() + "/mg_open_icon.png";
 
         } else {
-            RCTSplashScreenModule.ImgPath_start = context.getFilesDir().getAbsolutePath() + "/mg_open_image.jpg";
-            RCTSplashScreenModule.ImgPath_icon = context.getFilesDir().getAbsolutePath() + "/mg_open_icon.jpg";
+            RCTSplashScreenModule.ImgPath_start = context.getFilesDir().getAbsolutePath() + "/mg_open_image.png";
+            RCTSplashScreenModule.ImgPath_icon = context.getFilesDir().getAbsolutePath() + "/mg_open_icon.png";
 
         }
     }
@@ -132,7 +132,7 @@ public class RCTSplashScreenModule extends ReactContextBaseJavaModule {
             }
             fos = new FileOutputStream(ImgPath);//picPath为保存SD卡路径
             if (fos != null) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
                 fos.close();
             }
         } catch (Exception e) {
