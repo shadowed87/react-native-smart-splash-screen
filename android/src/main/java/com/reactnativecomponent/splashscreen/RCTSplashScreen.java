@@ -5,6 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -27,6 +31,8 @@ public class RCTSplashScreen {
 
     private static Dialog dialog;
     private static ImageView imageView;
+    private static int Bottom_Height = 80;
+    private static int Icon_Height = 50;
 
     private static WeakReference<Activity> wr_activity;
 
@@ -52,6 +58,71 @@ public class RCTSplashScreen {
         return file_exists;
     }
 
+    public static void setImageView_logo(Bitmap bitmap, ImageView imageView) {
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int heigth = display.getHeight();
+
+        int bitmapHeight = bitmap.getHeight();
+        int bitmapWidth = bitmap.getWidth();
+
+        try {
+            int imageHeight = dp2px(Icon_Height);
+            float num = (float) bitmapHeight / imageHeight;
+            int imageW = (int) (bitmapWidth / num);
+
+            //计算压缩的比率
+            float scaleWidth = ((float) imageW) / bitmapWidth;
+            float scaleHeight = ((float) imageHeight) / bitmapHeight;
+            //获取想要缩放的matrix
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+            Bitmap new_bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmapWidth, bitmapHeight, matrix, true);
+
+            imageView.setImageBitmap(new_bitmap);
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static int dp2px(int dpval) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpval, getActivity().getResources().getDisplayMetrics());
+    }
+
+    public static void setImageView(Bitmap bitmap, ImageView imageView) {
+        //屏幕宽高
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int heigth = display.getHeight();
+        //图片宽高
+        int bitmapHeight = bitmap.getHeight();
+        int bitmapWidth = bitmap.getWidth();
+
+        try {
+            float num = (float) bitmapWidth / width;
+            int imageH = (int) (bitmapHeight / num);
+            int max_Height = heigth - dp2px(Bottom_Height);
+            if (imageH > max_Height) {
+                imageH = max_Height;
+                Log.d("aaaa", imageH + "----");
+            }
+            if (bitmapHeight > bitmapWidth) {
+                imageH = max_Height;
+            }
+            //计算压缩的比率
+            float scaleWidth = ((float) width) / bitmapWidth;
+            float scaleHeight = ((float) imageH) / bitmapHeight;
+            //获取想要缩放的matrix
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+            Bitmap new_bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmapWidth, bitmapHeight, matrix, true);
+
+            imageView.setImageBitmap(new_bitmap);
+        } catch (Exception e) {
+        }
+
+    }
+
     public static void openSplashScreen(final Activity activity, final boolean isFullScreen, final ImageView.ScaleType scaleType) {
         if (activity == null) return;
         /** add by david at 2019-10-17 start  */
@@ -75,10 +146,15 @@ public class RCTSplashScreen {
                         ImageView start_image = view.findViewById(R.id.start_image);
                         ImageView icon_image = view.findViewById(R.id.icon_image);
                         Bitmap bitmap_start = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_start);
-                        start_image.setImageBitmap(bitmap_start);
+//                        start_image.setImageBitmap(bitmap_start);
 
                         Bitmap bitmap_icon = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_icon);
-                        icon_image.setImageBitmap(bitmap_icon);
+//                        icon_image.setImageBitmap(bitmap_icon);
+
+                        // 图片大小适配 start
+                        setImageView(bitmap_start, start_image);
+                        setImageView_logo(bitmap_icon, icon_image);
+                        // 图片大小适配 end
 
                         dialog = new Dialog(context, isFullScreen ? android.R.style.Theme_Translucent_NoTitleBar_Fullscreen : android.R.style.Theme_Translucent_NoTitleBar);
                         dialog.setContentView(view);
