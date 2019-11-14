@@ -62,6 +62,9 @@ public class RCTSplashScreen {
     }
 
     public static void setImageView_logo(Bitmap bitmap, ImageView imageView) {
+        if (bitmap == null) {
+            return;
+        }
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
         int heigth = display.getHeight();
@@ -93,6 +96,9 @@ public class RCTSplashScreen {
     }
 
     public static void setImageView(Bitmap bitmap, ImageView imageView) {
+        if (bitmap == null) {
+            return;
+        }
         //屏幕宽高
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
