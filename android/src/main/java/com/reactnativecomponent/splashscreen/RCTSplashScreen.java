@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -18,6 +19,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -33,6 +35,7 @@ public class RCTSplashScreen {
     private static ImageView imageView;
     private static int Bottom_Height = 80;
     private static int Icon_Height = 50;
+
 
     private static WeakReference<Activity> wr_activity;
 
@@ -143,6 +146,14 @@ public class RCTSplashScreen {
                     Context context = getActivity();
                     if (file_exists) {
                         View view = View.inflate(context, R.layout.start_view, null);
+                        final TextView textview_skip = view.findViewById(R.id.textview_skip);
+                        LinearLayout layout_skip = view.findViewById(R.id.layout_skip);
+                        layout_skip.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
+                            }
+                        });
                         ImageView start_image = view.findViewById(R.id.start_image);
                         ImageView icon_image = view.findViewById(R.id.icon_image);
                         Bitmap bitmap_start = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_start);
@@ -160,6 +171,24 @@ public class RCTSplashScreen {
                         dialog.setContentView(view);
                         dialog.setCancelable(false);
                         dialog.show();
+
+
+                        /** add by david 倒计时 start */
+                        CountDownTimer timer = new CountDownTimer(3 * 1000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                // TODO Auto-generated method stub
+                                textview_skip.setText("跳过" + "(" + millisUntilFinished / 1000 + ")");
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                if (dialog != null && dialog.isShowing()) {
+                                    RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
+                                }
+                            }
+                        }.start();
+                        /** add by david 倒计时 end */
                         return;
                     }
                     imageView = new ImageView(context);
