@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -113,11 +112,11 @@ public class RCTSplashScreen {
             int max_Height = heigth - dp2px(Bottom_Height);
             if (imageH > max_Height) {
                 imageH = max_Height;
-                Log.d("aaaa", imageH + "----");
+//                Log.d("aaaa", imageH + "----");
             }
-            if (bitmapHeight > bitmapWidth) {
-                imageH = max_Height;
-            }
+//            if (bitmapHeight > bitmapWidth) {
+//                imageH = max_Height;
+//            }
             //计算压缩的比率
             float scaleWidth = ((float) width) / bitmapWidth;
             float scaleHeight = ((float) imageH) / bitmapHeight;
@@ -162,6 +161,7 @@ public class RCTSplashScreen {
                         });
                         ImageView start_image = view.findViewById(R.id.start_image);
                         ImageView icon_image = view.findViewById(R.id.icon_image);
+                        ImageView icon_image_default = view.findViewById(R.id.icon_image_default);
                         Bitmap bitmap_start = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_start);
 //                        start_image.setImageBitmap(bitmap_start);
 
@@ -172,6 +172,10 @@ public class RCTSplashScreen {
                         setImageView(bitmap_start, start_image);
                         setImageView_logo(bitmap_icon, icon_image);
                         // 图片大小适配 end
+                        //icon无设置情况下
+                        if (bitmap_icon == null) {
+//                            icon_image_default.setVisibility(View.VISIBLE);
+                        }
 
                         dialog = new Dialog(context, isFullScreen ? android.R.style.Theme_Translucent_NoTitleBar_Fullscreen : android.R.style.Theme_Translucent_NoTitleBar);
                         dialog.setContentView(view);
@@ -180,7 +184,7 @@ public class RCTSplashScreen {
 
 
                         /** add by david 倒计时 start */
-                        CountDownTimer timer = new CountDownTimer(3 * 1000, 1000) {
+                        CountDownTimer timer = new CountDownTimer(4 * 1000, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                                 // TODO Auto-generated method stub
@@ -190,7 +194,7 @@ public class RCTSplashScreen {
                             @Override
                             public void onFinish() {
                                 if (dialog != null && dialog.isShowing()) {
-                                    RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
+//                                    RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
                                 }
                             }
                         }.start();
