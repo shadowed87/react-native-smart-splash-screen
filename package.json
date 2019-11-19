@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-native-component/react-native-smart-splash-screen.git"
+    "url": "git+https://github.com/fenglu09/react-native-smart-splash-screen.git"
   },
   "keywords": [
     "react-native",
@@ -18,12 +18,12 @@
     "splashscreen",
     "component"
   ],
-  "author": "HISAME SHIZUMARU",
+  "author": "Jason",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-native-component/react-native-smart-splash-screen/issues"
+    "url": "https://github.com/fenglu09/react-native-smart-splash-screen/issues"
   },
-  "homepage": "https://github.com/react-native-component/react-native-smart-splash-screen#readme",
+  "homepage": "https://github.com/fenglu09/react-native-smart-splash-screen#readme",
   "peerDependencies": {
     "react-native": ">=0.40.0"
   }
