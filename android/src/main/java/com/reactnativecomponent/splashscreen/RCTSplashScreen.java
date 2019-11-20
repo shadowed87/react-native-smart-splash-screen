@@ -34,7 +34,7 @@ public class RCTSplashScreen {
     private static ImageView imageView;
     private static int Bottom_Height = 80;
     private static int Icon_Height = 50;
-
+    private static boolean skipable = true;//add by david at 2019-11-19
 
     private static WeakReference<Activity> wr_activity;
 
@@ -156,7 +156,10 @@ public class RCTSplashScreen {
                         layout_skip.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
+                                if (skipable) {
+                                    skipable = false;
+                                    RCTSplashScreen.removeSplashScreen(getActivity(), RCTSplashScreen.UIAnimationFade, 800);
+                                }
                             }
                         });
                         ImageView start_image = view.findViewById(R.id.start_image);
