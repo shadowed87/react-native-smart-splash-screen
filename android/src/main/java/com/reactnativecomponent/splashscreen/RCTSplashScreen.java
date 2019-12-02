@@ -151,8 +151,8 @@ public class RCTSplashScreen {
                     Context context = getActivity();
                     if (file_exists) {
                         View view = View.inflate(context, R.layout.start_view, null);
-                        final TextView textview_skip = view.findViewById(R.id.textview_skip);
-                        LinearLayout layout_skip = view.findViewById(R.id.layout_skip);
+                        final TextView textview_skip = (TextView) view.findViewById(R.id.textview_skip);
+                        LinearLayout layout_skip = (LinearLayout) view.findViewById(R.id.layout_skip);
                         layout_skip.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -162,9 +162,9 @@ public class RCTSplashScreen {
                                 }
                             }
                         });
-                        ImageView start_image = view.findViewById(R.id.start_image);
-                        ImageView icon_image = view.findViewById(R.id.icon_image);
-                        ImageView icon_image_default = view.findViewById(R.id.icon_image_default);
+                        ImageView start_image = (ImageView) view.findViewById(R.id.start_image);
+                        ImageView icon_image = (ImageView) view.findViewById(R.id.icon_image);
+                        ImageView icon_image_default = (ImageView) view.findViewById(R.id.icon_image_default);
                         Bitmap bitmap_start = BitmapFactory.decodeFile(RCTSplashScreenModule.ImgPath_start);
 //                        start_image.setImageBitmap(bitmap_start);
 
